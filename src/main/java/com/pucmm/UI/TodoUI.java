@@ -1,6 +1,5 @@
 package com.pucmm.UI;
 
-import com.pucmm.Entity.Todo;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
@@ -8,7 +7,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by Eduardo veras on 16-Oct-16.
@@ -22,15 +20,12 @@ public class TodoUI extends UI{
 
     private VerticalLayout layout;
 
-    @Autowired
-    TodoList todoList;
 
     @Override
     protected void init(VaadinRequest request) {
         setupLayout();
         addHeader();
-        addForm();
-        addTodoList();
+        addCalendar();
         addButton();
 
     }
@@ -46,53 +41,48 @@ public class TodoUI extends UI{
 
     public void addHeader()
     {
-        Label header = new Label("TODO");
+        Label header = new Label("THE CALENDAR OF LIFE");
         header.addStyleName(ValoTheme.LABEL_H1);
         header.setSizeUndefined();
         layout.addComponent(header);
-        Calendar cal = new Calendar();
-        layout.addComponent(cal);
+
 
     }
 
-    public void addForm()
+    public void addCalendar()
     {
         HorizontalLayout formLayout= new HorizontalLayout();
         formLayout.setSpacing(true);
         formLayout.setWidth("80%");
 
-        TextField taskField = new TextField();
-        taskField.setWidth("100%");
+
 
         Button addButton = new Button("ADD");
         addButton.setIcon(FontAwesome.PLUS);
         addButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        formLayout.addComponents(taskField,addButton);
-        formLayout.setExpandRatio(taskField,1);
         layout.addComponent(formLayout);
+        Calendar cal = new Calendar();
+        layout.addComponent(cal);
 
 
         addButton.addClickListener(click -> {
-            todoList.addTodo(new Todo(taskField.getValue()));
-            taskField.setValue("");
-            taskField.focus();
+            //ADD TO CALENDAR
+
         });
         addButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
     }
 
-    public void addTodoList()
-    {
-        todoList.setWidth("80%");
-        layout.addComponent(todoList);
-    }
 
     public void addButton()
     {
         Button deleteButton = new Button("Delete completed");
 
-        deleteButton.addClickListener(click->todoList.deleteCompleted());
+        deleteButton.addClickListener(click->{
+            //      DO THE MAGIC
+                }
+        );
 
         layout.addComponent(deleteButton);
     }

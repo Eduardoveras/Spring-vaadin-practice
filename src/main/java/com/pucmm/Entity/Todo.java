@@ -1,5 +1,6 @@
 package com.pucmm.Entity;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,6 @@ public class Todo {
     private long id;
 
     private String text;
-
     private boolean done;
 
     public Todo() {
