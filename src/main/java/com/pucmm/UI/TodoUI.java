@@ -50,6 +50,8 @@ public class TodoUI extends UI{
         header.addStyleName(ValoTheme.LABEL_H1);
         header.setSizeUndefined();
         layout.addComponent(header);
+        Calendar cal = new Calendar();
+        layout.addComponent(cal);
 
     }
 
