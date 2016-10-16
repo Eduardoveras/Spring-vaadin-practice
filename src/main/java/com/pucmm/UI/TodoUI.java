@@ -1,6 +1,9 @@
 package com.pucmm.UI;
 
+import com.pucmm.Entity.Todo;
 import com.vaadin.annotations.Theme;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
@@ -35,6 +38,7 @@ public class TodoUI extends UI{
     public void setupLayout()
     {
         layout= new VerticalLayout();
+        layout.setSpacing(true);
         layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         setContent(layout);
 
@@ -54,10 +58,25 @@ public class TodoUI extends UI{
         HorizontalLayout formLayout= new HorizontalLayout();
         formLayout.setSpacing(true);
         formLayout.setWidth("80%");
+
         TextField taskField = new TextField();
+        taskField.setWidth("100%");
+
         Button addButton = new Button("ADD");
+        addButton.setIcon(FontAwesome.PLUS);
+        addButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
         formLayout.addComponents(taskField,addButton);
+        formLayout.setExpandRatio(taskField,1);
         layout.addComponent(formLayout);
+
+
+        addButton.addClickListener(click -> {
+            todoList.addTodo(new Todo(taskField.getValue()));
+            taskField.setValue("");
+            taskField.focus();
+        });
+        addButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
     }
 
@@ -69,7 +88,10 @@ public class TodoUI extends UI{
 
     public void addButton()
     {
-        Button delete = new Button("DELETE");
-        layout.addComponent(delete);
+        Button deleteButton = new Button("Delete completed");
+
+        deleteButton.addClickListener(click->todoList.deleteCompleted());
+
+        layout.addComponent(deleteButton);
     }
 }
