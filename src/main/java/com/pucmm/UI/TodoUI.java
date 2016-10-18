@@ -1,12 +1,24 @@
 package com.pucmm.UI;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Item;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.calendar.CalendarTargetDetails;
+import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.themes.ValoTheme;
+import de.essendi.vaadin.ui.component.numberfield.NumberField;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Eduardo veras on 16-Oct-16.
@@ -19,15 +31,15 @@ import com.vaadin.ui.themes.ValoTheme;
 public class TodoUI extends UI{
 
     private VerticalLayout layout;
+    private Calendar cal;
 
 
     @Override
     protected void init(VaadinRequest request) {
         setupLayout();
         addHeader();
+        addForm();
         addCalendar();
-        addButton();
-
     }
 
     public void setupLayout()
@@ -39,13 +51,52 @@ public class TodoUI extends UI{
 
     }
 
+    private void addForm() {
+        HorizontalLayout formLayout = new HorizontalLayout();
+        formLayout.setWidth("80%");
+        formLayout.setSpacing(true);
+
+        TextField titulo = new TextField();
+        titulo.focus();
+
+        TextField descripcion = new TextField();
+
+        DateField inicio = new DateField("inicio");
+        inicio.setDateFormat("yyyy/MM/dd h:m:s");
+
+
+        //NumberField duracion = new NumberField();
+
+
+
+        titulo.setWidth("100%");
+        Button addButton = new Button("");
+        addButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        addButton.setIcon(FontAwesome.PLUS);
+
+        formLayout.addComponents(titulo, descripcion,inicio,addButton);
+
+        layout.addComponent(formLayout);
+
+        addButton.addClickListener(click -> {
+            GregorianCalendar start = new GregorianCalendar();
+            GregorianCalendar end   = new GregorianCalendar();
+            start= inicio.get
+            end.add(java.util.Calendar.HOUR, 10);
+            cal.addEvent(new BasicEvent(titulo.getCaption(),
+                    descripcion.getCaption(),
+                    inicio.getValue(), inicio.getValue().add(java.util.Calendar.HOUR, 10)));
+
+        });
+        addButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+    }
+
     public void addHeader()
     {
         Label header = new Label("THE CALENDAR OF LIFE");
         header.addStyleName(ValoTheme.LABEL_H1);
         header.setSizeUndefined();
         layout.addComponent(header);
-
 
     }
 
@@ -62,28 +113,30 @@ public class TodoUI extends UI{
         addButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
         layout.addComponent(formLayout);
-        Calendar cal = new Calendar();
+        cal= new Calendar();
+        cal.setFirstDayOfWeek(1);
+        //cal.setFirstVisibleHourOfDay(6);
+        //cal.setLastVisibleHourOfDay(21);
+
+
+        GregorianCalendar start = new GregorianCalendar();
+        GregorianCalendar end   = new GregorianCalendar();
+        end.add(java.util.Calendar.HOUR, 5);
+        cal.addEvent(new BasicEvent("Calendar study",
+                "Learning how to use Vaadin Calendar",
+                start.getTime(), end.getTime()));
+
         layout.addComponent(cal);
 
 
-        addButton.addClickListener(click -> {
-            //ADD TO CALENDAR
-
-        });
-        addButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-
     }
 
 
-    public void addButton()
-    {
-        Button deleteButton = new Button("Delete completed");
 
-        deleteButton.addClickListener(click->{
-            //      DO THE MAGIC
-                }
-        );
 
-        layout.addComponent(deleteButton);
-    }
+
+
+
+
+
 }
