@@ -28,7 +28,7 @@ public class emailModal extends FormLayout {
     TextField caption = new TextField("Caption");
     TextArea description = new TextArea("Description");
 
-    Button addBtn = new Button("Add");
+    Button addBtn = new Button("Send");
     Button cancelBtn = new Button("Cancel");
 
 
@@ -53,7 +53,7 @@ public class emailModal extends FormLayout {
                 Content content = new Content("text/plain", description.getValue());
                 Mail mail = new Mail(from, subject, to, content);
 
-                SendGrid sg = new SendGrid(System.getenv("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"));
+                SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
                 Request request = new Request();
                 try {
                     request.method = Method.POST;

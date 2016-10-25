@@ -47,6 +47,7 @@ public class MainView extends UI{
     private CustomEventProvider customEventProvider;
     @Autowired
     private eventModal eventModal;
+    private emailModal emailModal;
 
 
     private VerticalLayout layout = new VerticalLayout();
@@ -61,6 +62,7 @@ public class MainView extends UI{
         addCalendar();
         eventModal = new eventModal();
         eventModal.setCalendar(cal);
+        emailModal= new emailModal();
         addForm();
     }
 
@@ -80,13 +82,19 @@ public class MainView extends UI{
     private void addForm() {
 
         Button addButton = new Button("");
+        Button emailBtn = new Button("");
+
+        emailBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        emailBtn.setIcon(FontAwesome.ENVELOPE);
         addButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
         addButton.setIcon(FontAwesome.PLUS);
 
         setUpButtonModalView(addButton, "Add New Event", eventModal);
+        setUpButtonModalView(emailBtn, "Send Email", emailModal);
 
 
-        layout.addComponent(addButton);
+        layout.addComponents(addButton,emailBtn);
+
         //layout.setComponentAlignment(addButton, Alignment.TOP_CENTER);
 
 
