@@ -12,6 +12,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
+import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
@@ -45,7 +46,7 @@ public class MainView extends UI{
     @Autowired
     private CustomEventProvider customEventProvider;
     @Autowired
-    private eventModal eventModal= new eventModal();
+    private eventModal eventModal;
 
 
     private VerticalLayout layout = new VerticalLayout();
@@ -57,9 +58,10 @@ public class MainView extends UI{
 
         setupLayout();
         addHeader();
-        addForm();
         addCalendar();
+        eventModal = new eventModal();
         eventModal.setCalendar(cal);
+        addForm();
     }
 
     public void setupLayout()
@@ -85,7 +87,7 @@ public class MainView extends UI{
 
 
         layout.addComponent(addButton);
-        layout.setComponentAlignment(addButton, Alignment.MIDDLE_CENTER);
+        //layout.setComponentAlignment(addButton, Alignment.TOP_CENTER);
 
 
         addButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -103,17 +105,11 @@ public class MainView extends UI{
 
     public void addCalendar()
     {
-        HorizontalLayout formLayout= new HorizontalLayout();
-        formLayout.setSpacing(true);
-        formLayout.setWidth("80%");
-
-
 
         Button addButton = new Button("ADD");
         addButton.setIcon(FontAwesome.PLUS);
         addButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        layout.addComponent(formLayout);
         cal= new Calendar();
         cal.setFirstDayOfWeek(1);
         cal.setTimeFormat(Calendar.TimeFormat.Format12H);
@@ -124,6 +120,7 @@ public class MainView extends UI{
         cal.setFirstVisibleHourOfDay(6);
         cal.setLastVisibleHourOfDay(20);
         cal.setSizeFull();
+        cal.setHeight("100%");
 
 
 
@@ -188,7 +185,10 @@ public class MainView extends UI{
         cal.setLastVisibleHourOfDay(20);
         cal.setSizeFull();
 
+
         layout.addComponent(cal);
+        layout.setExpandRatio(cal, 1.0f);
+
 
 
     }

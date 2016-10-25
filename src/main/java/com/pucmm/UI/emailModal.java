@@ -2,6 +2,7 @@ package com.pucmm.UI;
 
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
+import com.sendgrid.*;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.spring.annotation.SpringUI;
@@ -10,39 +11,28 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
- * Created by Eduardo veras on 22-Oct-16.
+ * Created by Eduardo veras on 25-Oct-16.
  */
+
 @Component
 @UIScope
 @SpringUI
-public class eventModal extends FormLayout {
+public class emailModal extends FormLayout {
 
-    @Autowired
-    EventService eventService;
-
-    Calendar calendar;
-
-    DateField start = new PopupDateField("Start Date");
-    DateField end = new PopupDateField("End Date");
-
+    TextField emailFrom = new TextField("From:");
+    TextField emailTo = new TextField("To:");
     TextField caption = new TextField("Caption");
     TextArea description = new TextArea("Description");
 
     Button addBtn = new Button("Add");
     Button cancelBtn = new Button("Cancel");
 
-    public eventModal(Date startDate, Date endDate) {
-        start.setValue(startDate);
-        end.setValue(endDate);
-        setup();
-    }
 
-    public eventModal() {
-        start.setValue(new Date());
-        end.setValue(new Date());
+    public emailModal() {
         setup();
 
     }
@@ -52,19 +42,30 @@ public class eventModal extends FormLayout {
         setSizeUndefined();
         setMargin(true);
         setSpacing(true);
-        start.setResolution(Resolution.MINUTE);
-        end.setResolution(Resolution.MINUTE);
+
         addBtn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         addBtn.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                CustomEvent e = new CustomEvent();
-                e.setDescription(description.getValue());
-                e.setCaption(caption.getValue());
-                e.setStart(start.getValue());
-                e.setEnd(end.getValue());
-                e.setAllDay(false);
-                calendar.addEvent(e);
+                Email from = new Email(emailFrom.getValue());
+                String subject = caption.getValue();
+                Email to = new Email(emailTo.getValue());
+                Content content = new Content("text/plain", description.getValue());
+                Mail mail = new Mail(from, subject, to, content);
+
+                SendGrid sg = new SendGrid(System.getenv("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"));
+                Request request = new Request();
+                try {
+                    request.method = Method.POST;
+                    request.endpoint = "mail/send";
+                    request.body = mail.build();
+                    Response response = sg.api(request);
+                    System.out.println(response.statusCode);
+                    System.out.println(response.body);
+                    System.out.println(response.headers);
+                } catch (IOException ex) {
+                    //throw ex;
+                }
                 ((Window)getParent()).close();
             }
         });
@@ -81,24 +82,11 @@ public class eventModal extends FormLayout {
         HorizontalLayout buttons = new HorizontalLayout(addBtn, cancelBtn);
         buttons.setSpacing(true);
 
-        start.setCaption("Start:");
-        end.setCaption("End:");
+        emailFrom.setCaption("From:");
+        emailTo.setCaption("To:");
         caption.setCaption("Title:");
         description.setCaption("Description:");
 
-        addComponents( caption, description, start, end,buttons);
-    }
-
-    public void setDates(Date startDate, Date endDate) {
-        start.setValue(startDate);
-        end.setValue(endDate);
-    }
-
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+        addComponents( emailFrom,emailTo,caption, description,buttons);
     }
 }
