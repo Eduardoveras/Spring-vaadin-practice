@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
+    private boolean loggedIn;
 
     // Constructors
     public User(){
@@ -26,6 +27,7 @@ public class User implements Serializable {
         this.setFirstName(firstName.toLowerCase());
         this.setLastName(lastName.toUpperCase());
         this.setPassword(password);
+        this.setLoggedIn(false);
     }
 
     // Getters and Setters
@@ -63,5 +65,13 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
 }
