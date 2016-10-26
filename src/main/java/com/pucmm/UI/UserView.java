@@ -38,15 +38,16 @@ public class UserView extends UI {
             getUI().getPage().setLocation("/");
         else if (!accessControlService.fetchAllRegisteredUser().get(0).isLoggedIn())
             getUI().getPage().setLocation("/");
-        else
+        else {
             user = accessControlService.fetchAllRegisteredUser().get(0);
 
-        setupLayout();
-        addHeader();
-        displayUserInfo();
-        addInfoForm();
-        addPasswordForm();
-        formatLayout();
+            setupLayout();
+            addHeader();
+            displayUserInfo();
+            addInfoForm();
+            addPasswordForm();
+            formatLayout();
+        }
     }
 
     private void setupLayout()
