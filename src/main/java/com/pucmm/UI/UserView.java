@@ -4,6 +4,7 @@
 package com.pucmm.UI;
 
 import com.pucmm.Services.AccessControlService;
+import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
@@ -20,25 +21,32 @@ public class UserView extends UI {
     @Autowired
     private AccessControlService accessControlService;
 
-    private HorizontalLayout layout;
+    private VerticalLayout layout;
+    private HorizontalLayout fittingLayout;
     private FormLayout editPassword;
     private VerticalLayout infoLayout;
 
-    @Override
-    public void init(VaadinRequest vaadinRequest){
+    private User user;
 
+    @Override
+    protected void init(VaadinRequest vaadinRequest){
         if (accessControlService.fetchAllRegisteredUser().isEmpty())
             getUI().getPage().setLocation("/");
+        else
+            user = accessControlService.fetchAllRegisteredUser().get(0);
 
         setupLayout();
         addHeader();
+        displayUserInfo();
+        formatLayout();
     }
 
     public void setupLayout()
     {
-        Page.getCurrent().setTitle("Login");
+        Page.getCurrent().setTitle("USER INFO");
 
-        layout = new HorizontalLayout();
+        layout = new VerticalLayout();
+        fittingLayout = new HorizontalLayout();
         layout.setSpacing(true);
         layout.setMargin(true);
         layout.setSizeFull();
@@ -48,10 +56,28 @@ public class UserView extends UI {
 
     public void addHeader()
     {
-        Label header = new Label("YOUR ARE VIEWING THE PROFILE ASSIGNED TO " + accessControlService.fetchAllRegisteredUser().get(0).getFullName());
+        Label header = new Label("YOUR ARE VIEWING THE PROFILE ASSIGNED TO " + user.getFullName());
         header.addStyleName(ValoTheme.LABEL_H3);
         header.setSizeUndefined();
         layout.addComponent(header);
     }
 
+    private void displayUserInfo(){
+        infoLayout = new VerticalLayout();
+
+        Label email = new Label("Email Address: " + user.getEmail());
+        email.addStyleName(ValoTheme.LABEL_H4);
+        Label name = new Label("Name: " + user.getFullName());
+        name.addStyleName(ValoTheme.LABEL_H4);
+        Label password = new Label("Password: " + user.getPassword());
+        password.addStyleName(ValoTheme.LABEL_H3);
+
+        infoLayout.addComponents(email, name, password);
+
+        fittingLayout.addComponent(infoLayout);
+    }
+
+    private void formatLayout(){
+        layout.addComponent(fittingLayout);
+    }
 }
