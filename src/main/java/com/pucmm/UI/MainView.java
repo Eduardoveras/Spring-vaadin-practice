@@ -107,8 +107,6 @@ public class MainView extends UI{
         header.addStyleName(ValoTheme.LABEL_H1);
         header.setSizeUndefined();
         layout.addComponent(header);
-
-
     }
 
     public void addCalendar()

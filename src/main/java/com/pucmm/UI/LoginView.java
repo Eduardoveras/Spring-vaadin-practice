@@ -30,6 +30,7 @@ public class LoginView extends UI {
     protected void init(VaadinRequest request){
 
         setupLayout();
+        addHeader();
         addForm();
 
     }
@@ -57,15 +58,12 @@ public class LoginView extends UI {
 
         TextField lastName = new TextField("Last Name");
 
-        Button clickButton = accessControlService.fetchAllRegisteredUser().size() == 0 ? new Button("Register") : new Button("Login");
+        Button clickButton = accessControlService.fetchAllRegisteredUser().isEmpty() ? new Button("Register") : new Button("Login");
 
         clickButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
         clickButton.setIcon(FontAwesome.PLUS);
 
-        //setUpButtonModalView(addButton, "Add New Event", eventModal);
-        //setUpButtonModalView(emailBtn, "Send Email", emailModal);
-
-        if(accessControlService.fetchAllRegisteredUser().size() == 0)
+        if(accessControlService.fetchAllRegisteredUser().isEmpty())
             layout.addComponents(email, firstName, lastName, password, clickButton);
         else
             layout.addComponents(email, password, clickButton);
@@ -73,7 +71,7 @@ public class LoginView extends UI {
         clickButton.addClickListener(new Button.ClickListener(){
             @Override
             public void buttonClick(Button.ClickEvent event){
-                if (accessControlService.fetchAllRegisteredUser().size() == 0){
+                if (accessControlService.fetchAllRegisteredUser().isEmpty()){
                     try {
                         accessControlService.registerUser(email.getValue(), firstName.getValue(), lastName.getValue(), password.getValue());
                         getUI().getPage().setLocation("/");
@@ -95,5 +93,13 @@ public class LoginView extends UI {
         });
 
         clickButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+    }
+
+    public void addHeader()
+    {
+        Label header = accessControlService.fetchAllRegisteredUser().isEmpty() ? new Label("PLEASE REGISTER AN ACCOUNT") : new Label("LOGIN TO ACCESS SERVICES");
+        header.addStyleName(ValoTheme.LABEL_H3);
+        header.setSizeUndefined();
+        layout.addComponent(header);
     }
 }
