@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "event")
-public class CustomEvent implements CalendarEvent, EditableCalendarEvent, CalendarEvent.EventChangeNotifier {
+public class CustomEvent implements Serializable, CalendarEvent, EditableCalendarEvent, CalendarEvent.EventChangeNotifier {
 
     @Id
     @GeneratedValue
