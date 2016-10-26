@@ -4,6 +4,7 @@
 package com.pucmm.UI;
 
 import com.pucmm.Services.AccessControlService;
+import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
@@ -84,8 +85,23 @@ public class LoginView extends UI {
                     }
                 }
                 else {
-                    if (accessControlService.validateUserCredentials(email.getValue(), password.getValue()))
-                        getUI().getPage().setLocation("/calendar");
+                    if (accessControlService.validateUserCredentials(email.getValue(), password.getValue())) {
+                        try {
+                            User user = accessControlService.fetchAllRegisteredUser().get(0);
+
+                            user.setLoggedIn(true);
+
+                            accessControlService.editUser(user);
+
+                            getUI().getPage().setLocation("/calendar");
+                        } catch (PersistenceException exp){
+                            //
+                        } catch (NullPointerException exp){
+                            //
+                        } catch (Exception exp){
+                            //
+                        }
+                    }
                     else
                         getUI().getPage().setLocation("/");
                 }

@@ -1,5 +1,6 @@
 package com.pucmm.UI;
 
+import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
 import com.pucmm.model.CustomEventProvider;
@@ -42,6 +43,8 @@ import java.util.Locale;
 public class MainView extends UI{
 
     @Autowired
+    private AccessControlService accessControlService;
+    @Autowired
     private EventService eventService;
     @Autowired
     private CustomEventProvider customEventProvider;
@@ -68,6 +71,11 @@ public class MainView extends UI{
 
     public void setupLayout()
     {
+        if (accessControlService.fetchAllRegisteredUser().isEmpty())
+            getUI().getPage().setLocation("/");
+        else if (!accessControlService.fetchAllRegisteredUser().get(0).isLoggedIn())
+            getUI().getPage().setLocation("/");
+
         Page.getCurrent().setTitle("Spring Vaadin Calendar");
 
         layout= new VerticalLayout();

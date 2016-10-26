@@ -36,6 +36,8 @@ public class UserView extends UI {
     protected void init(VaadinRequest vaadinRequest){
         if (accessControlService.fetchAllRegisteredUser().isEmpty())
             getUI().getPage().setLocation("/");
+        else if (!accessControlService.fetchAllRegisteredUser().get(0).isLoggedIn())
+            getUI().getPage().setLocation("/");
         else
             user = accessControlService.fetchAllRegisteredUser().get(0);
 
