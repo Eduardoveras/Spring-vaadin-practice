@@ -37,7 +37,7 @@ import java.util.Locale;
 
 
 
-@SpringUI(path = "/")
+@SpringUI(path = "/calendar")
 @Theme("valo")
 public class MainView extends UI{
 
