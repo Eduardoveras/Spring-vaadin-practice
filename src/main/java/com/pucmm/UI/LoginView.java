@@ -14,6 +14,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.PersistenceException;
+
 @SpringUI(path = "/")
 @Theme("valo")
 public class LoginView extends UI {
@@ -67,7 +69,31 @@ public class LoginView extends UI {
             layout.addComponents(email, firstName, lastName, password, clickButton);
         else
             layout.addComponents(email, password, clickButton);
-        
+
+        clickButton.addClickListener(new Button.ClickListener(){
+            @Override
+            public void buttonClick(Button.ClickEvent event){
+                if (accessControlService.fetchAllRegisteredUser().size() == 0){
+                    try {
+                        accessControlService.registerUser(email.getValue(), firstName.getValue(), lastName.getValue(), password.getValue());
+                        getUI().getPage().setLocation("/");
+                    } catch (PersistenceException exp){
+                        //
+                    } catch (NullPointerException exp){
+                        //
+                    } catch (Exception exp){
+                        //
+                    }
+                }
+                else {
+                    if (accessControlService.validateUserCredentials(email.getValue(), password.getValue()))
+                        getUI().getPage().setLocation("/calendar");
+                    else
+                        getUI().getPage().setLocation("/");
+                }
+            }
+        });
+
         clickButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
     }
 }
