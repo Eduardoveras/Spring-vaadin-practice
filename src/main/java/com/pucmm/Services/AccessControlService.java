@@ -35,7 +35,7 @@ public class AccessControlService {
 
         try {
             userRepository.delete(fetchAllRegisteredUser().get(0));
-            
+
             userRepository.save(user);
         } catch (PersistenceException exp){
             throw new PersistenceException("Persistence Error while editing new user");
