@@ -11,10 +11,9 @@ import java.io.Serializable;
 public class User implements Serializable {
     // Atributes
     @Id
-    private String username;
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
     private String password;
 
     // Constructors
@@ -22,23 +21,14 @@ public class User implements Serializable {
 
     }
 
-    public User(String username, String firstName, String lastName, String email, String password){
-        this.setUsername(username);
+    public User( String email, String firstName, String lastName, String password){
+        this.setEmail(email);
         this.setFirstName(firstName.toLowerCase());
         this.setLastName(lastName.toUpperCase());
-        this.setEmail(email);
         this.setPassword(password);
     }
 
     // Getters and Setters
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getFirstName() {
         return firstName;
     }
