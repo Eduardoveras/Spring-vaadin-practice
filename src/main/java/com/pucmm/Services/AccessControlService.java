@@ -6,10 +6,12 @@ package com.pucmm.Services;
 import com.pucmm.Repositories.UserRepository;
 import com.pucmm.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+@Service
 public class AccessControlService {
     // Repository
     @Autowired
