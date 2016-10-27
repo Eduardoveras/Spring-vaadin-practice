@@ -10,6 +10,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -22,8 +23,6 @@ public class eventModal extends FormLayout {
 
     @Autowired
     EventService eventService;
-
-
 
     DateField start = new PopupDateField("Start Date");
     DateField end = new PopupDateField("End Date");
@@ -58,13 +57,19 @@ public class eventModal extends FormLayout {
         addBtn.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                CustomEvent e = new CustomEvent();
-                e.setDescription(description.getValue());
-                e.setCaption(caption.getValue());
-                e.setStart(start.getValue());
-                e.setEnd(end.getValue());
-                e.setAllDay(false);
-                MainView.eventService.save(e);
+                CustomEvent e = new CustomEvent(caption.getValue(), description.getValue(), false, start.getValue(), end.getValue());
+                //e.setDescription(description.getValue());
+                //e.setCaption(caption.getValue());
+                //e.setStart(start.getValue());
+                //e.setEnd(end.getValue());
+                //e.setAllDay(false);
+                try {
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                    eventService.registerEvent(caption.getValue(), description.getValue(), false, sdf1.parse(start.getValue().toString()), sdf1.parse(end.getValue().toString()));
+
+                } catch (Exception exp){
+                    
+                }
                 MainView.cal.addEvent(e);
 
                 ((Window)getParent()).close();
@@ -88,7 +93,7 @@ public class eventModal extends FormLayout {
         caption.setCaption("Title:");
         description.setCaption("Description:");
 
-        addComponents( caption, description, start, end,buttons);
+        addComponents( caption, description, start, end, buttons);
     }
 
     public void setDates(Date startDate, Date endDate) {

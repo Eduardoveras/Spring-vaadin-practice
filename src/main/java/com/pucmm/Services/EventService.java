@@ -20,7 +20,7 @@ public class EventService {
     private EventRepository eventRepository;
 
     public List<CustomEvent> findAll() {
-        return (List<CustomEvent>) eventRepository.findAll();
+        return eventRepository.findAll();
     }
 
     public List<CustomEvent> findAllByStartAndEndDates(Date start, Date end) {
@@ -31,13 +31,12 @@ public class EventService {
         return eventRepository.findByDatesBetween(startDate, endDate);
     }
 
-    @Transactional
-    public CustomEvent save(CustomEvent customEvent) {
-        eventRepository.save(customEvent);
-        return customEvent;
+    //@Transactional
+    public CustomEvent registerEvent(String caption, String description, boolean isAllDay, Date start, Date end) {
+        return eventRepository.save(new CustomEvent(caption, description, isAllDay, start, end));
     }
 
-    @Transactional
+    //@Transactional
     public boolean delete(CustomEvent customEvent) {
         eventRepository.delete(customEvent);
         return true;
