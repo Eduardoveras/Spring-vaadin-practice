@@ -3,30 +3,19 @@ package com.pucmm.UI;
 import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
-import com.pucmm.model.CustomEventProvider;
 import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Item;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
-import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;
-import com.vaadin.ui.components.calendar.CalendarTargetDetails;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
-import de.essendi.vaadin.ui.component.numberfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.PersistenceException;
@@ -47,8 +36,7 @@ public class MainView extends UI{
     @Autowired
     private AccessControlService accessControlService;
     @Autowired
-    public static EventService eventService = new EventService();
-    private CustomEventProvider customEventProvider;
+    public EventService eventService;
 
 
     @Autowired
@@ -60,16 +48,12 @@ public class MainView extends UI{
     public static Calendar cal;
 
     @Autowired
-    public MainView(eventModal eventMod,CustomEventProvider customEve)
+    public MainView(eventModal eventMod)
     {
         this.eventModal = eventMod;
-        this.customEventProvider = customEve;
 
         //this.eventModal.setCalendar(cal);
     }
-
-
-
 
     @Override
     protected void init(VaadinRequest request) {
@@ -82,7 +66,7 @@ public class MainView extends UI{
             setupLayout();
             addHeader();
             addCalendar();
-            cal.setEventProvider(customEventProvider);
+            //cal.setEventProvider(customEventProvider);
             eventModal = new eventModal();
             emailModal = new emailModal();
             addForm();
@@ -123,7 +107,10 @@ public class MainView extends UI{
         viewInfo.addStyleName(ValoTheme.BUTTON_PRIMARY);
         viewInfo.setIcon(FontAwesome.ARCHIVE);
 
-        setUpButtonModalView(addButton, "Add New Event", eventModal);
+        if (!eventService.findAll().isEmpty())
+            setUpButtonModalView(addButton, "Add New Event (" + eventService.findAll().size() + ")", eventModal);
+        else
+            setUpButtonModalView(addButton, "Add New Event", eventModal);
         setUpButtonModalView(emailBtn, "Send Email", emailModal);
 
         footerLayout.addComponents(addButton, emailBtn, logOut, viewInfo);
@@ -212,7 +199,7 @@ public class MainView extends UI{
                 CustomEvent e = (CustomEvent) event;
                 e.setStart(start);
                 e.setEnd(end);
-                eventService.save(e);
+                eventService.registerEvent(e.getCaption(), e.getDescription(), e.isAllDay(), e.getStart(), e.getEnd());
             }
         });
 
@@ -222,7 +209,7 @@ public class MainView extends UI{
                 CustomEvent e = (CustomEvent) event;
                 e.setStart(start);
                 e.setEnd(end);
-                eventService.save(e);
+                eventService.registerEvent(e.getCaption(), e.getDescription(), e.isAllDay(), e.getStart(), e.getEnd());
             }
         });
         cal.setHandler(new CalendarComponentEvents.RangeSelectHandler() {
@@ -247,11 +234,8 @@ public class MainView extends UI{
         cal.setLastVisibleHourOfDay(20);
         cal.setSizeFull();
 
-
         layout.addComponent(cal);
         layout.setExpandRatio(cal, 1.0f);
-
-
 
     }
 
@@ -281,11 +265,5 @@ public class MainView extends UI{
         cal.setTime(date);
         return cal.get(java.util.Calendar.MONTH) == thisMonth;
     }
-
-
-
-
-
-
 
 }
