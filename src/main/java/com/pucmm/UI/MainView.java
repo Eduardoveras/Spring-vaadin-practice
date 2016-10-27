@@ -46,7 +46,7 @@ public class MainView extends UI{
     @Autowired
     private AccessControlService accessControlService;
     @Autowired
-    private EventService eventService;
+    public static EventService eventService = new EventService();
 
     @Autowired
     private eventModal eventModal;

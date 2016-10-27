@@ -64,7 +64,9 @@ public class eventModal extends FormLayout {
                 e.setStart(start.getValue());
                 e.setEnd(end.getValue());
                 e.setAllDay(false);
+                MainView.eventService.save(e);
                 MainView.cal.addEvent(e);
+
                 ((Window)getParent()).close();
             }
         });
