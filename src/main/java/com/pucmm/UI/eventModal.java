@@ -23,7 +23,7 @@ public class eventModal extends FormLayout {
     @Autowired
     EventService eventService;
 
-    Calendar calendar;
+
 
     DateField start = new PopupDateField("Start Date");
     DateField end = new PopupDateField("End Date");
@@ -64,7 +64,7 @@ public class eventModal extends FormLayout {
                 e.setStart(start.getValue());
                 e.setEnd(end.getValue());
                 e.setAllDay(false);
-                calendar.addEvent(e);
+                MainView.cal.addEvent(e);
                 ((Window)getParent()).close();
             }
         });
@@ -94,11 +94,5 @@ public class eventModal extends FormLayout {
         end.setValue(endDate);
     }
 
-    public Calendar getCalendar() {
-        return calendar;
-    }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
-    }
 }

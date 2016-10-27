@@ -8,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Eduardo veras on 22-Oct-16.
@@ -17,7 +19,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "event")
-public class CustomEvent implements Serializable, CalendarEvent, EditableCalendarEvent, CalendarEvent.EventChangeNotifier {
+public class CustomEvent implements CalendarEvent, EditableCalendarEvent, CalendarEvent.EventChangeNotifier {
 
     @Id
     @GeneratedValue
@@ -42,78 +44,9 @@ public class CustomEvent implements Serializable, CalendarEvent, EditableCalenda
     private Date end;
 
 
-    @Override
-    public void addEventChangeListener(EventChangeListener listener) {
-
-    }
-
-    @Override
-    public void removeEventChangeListener(EventChangeListener listener) {
-
-    }
-
-    @Override
-    public void setCaption(String caption) {
-
-    }
-
-    @Override
-    public void setDescription(String description) {
-
-    }
-
-    @Override
-    public void setEnd(Date end) {
-
-    }
-
-    @Override
-    public void setStart(Date start) {
-
-    }
-
-    @Override
-    public void setStyleName(String styleName) {
-
-    }
-
-    @Override
-    public void setAllDay(boolean isAllDay) {
-
-    }
-
-    @Override
-    public Date getStart() {
-        return null;
-    }
-
-    @Override
-    public Date getEnd() {
-        return null;
-    }
-
-    @Override
-    public String getCaption() {
-        return null;
-    }
-
-    @Override
-    public String getDescription() {
-        return null;
-    }
-
-    @Override
-    public String getStyleName() {
-        return null;
-    }
-
-    @Override
-    public boolean isAllDay() {
-        return false;
-    }
+    private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
 
     public CustomEvent() { }
-
 
     public CustomEvent(String caption, String description, boolean isAllDay, Date start, Date end) {
         this.caption = caption;
@@ -121,6 +54,96 @@ public class CustomEvent implements Serializable, CalendarEvent, EditableCalenda
         this.isAllDay = isAllDay;
         this.start = start;
         this.end = end;
+    }
+
+    @Override
+    public void addEventChangeListener(EventChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeEventChangeListener(EventChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void setCaption(String caption) {
+        this.caption = caption;
+        fireEventChange();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+        fireEventChange();
+    }
+
+    @Override
+    public void setEnd(Date end) {
+        this.end = end;
+        fireEventChange();
+    }
+
+    @Override
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    @Override
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
+    @Override
+    public void setAllDay(boolean isAllDay) {
+        this.isAllDay = isAllDay;
+        fireEventChange();
+    }
+
+    @Override
+    public Date getStart() {
+        return start;
+    }
+
+    @Override
+    public Date getEnd() {
+        return end;
+    }
+
+    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String getStyleName() {
+        return styleName;
+    }
+
+    @Override
+    public boolean isAllDay() {
+        return isAllDay;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    protected void fireEventChange() {
+        EventChangeEvent event = new EventChangeEvent(this);
+
+        for (EventChangeListener listener : listeners) {
+            listener.eventChange(event);
+        }
     }
 
     public boolean isNotified() {

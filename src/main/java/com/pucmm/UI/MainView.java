@@ -3,7 +3,6 @@ package com.pucmm.UI;
 import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
-import com.pucmm.model.CustomEventProvider;
 import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
@@ -48,15 +47,14 @@ public class MainView extends UI{
     private AccessControlService accessControlService;
     @Autowired
     private EventService eventService;
-    @Autowired
-    private CustomEventProvider customEventProvider;
+
     @Autowired
     private eventModal eventModal;
     private emailModal emailModal;
 
 
     private VerticalLayout layout = new VerticalLayout();
-    private Calendar cal = new Calendar();
+    public static Calendar cal;
 
 
     @Override
@@ -71,7 +69,6 @@ public class MainView extends UI{
             addHeader();
             addCalendar();
             eventModal = new eventModal();
-            eventModal.setCalendar(cal);
             emailModal = new emailModal();
             addForm();
         }
@@ -121,9 +118,7 @@ public class MainView extends UI{
             public void buttonClick(Button.ClickEvent event){
                 try {
                     User user = accessControlService.fetchAllRegisteredUser().get(0);
-
                     user.setLoggedIn(false);
-
                     accessControlService.editUser(user);
                 } catch (PersistenceException ex){
                     //
@@ -132,7 +127,6 @@ public class MainView extends UI{
                 } catch (Exception ex){
                     //
                 }
-
                 getUI().getPage().setLocation("/");
             }
         });
@@ -171,18 +165,14 @@ public class MainView extends UI{
         cal.setFirstDayOfWeek(1);
         cal.setTimeFormat(Calendar.TimeFormat.Format12H);
 
-        cal.setWeeklyCaptionFormat("yyyy/MM/dd h:m:s");
+        cal.setWeeklyCaptionFormat("yyyy-MM-dd");
         cal.setFirstVisibleDayOfWeek(1);
         cal.setLastVisibleDayOfWeek(7);
-        cal.setFirstVisibleHourOfDay(6);
-        cal.setLastVisibleHourOfDay(20);
+        //cal.setFirstVisibleHourOfDay(6);
+        //cal.setLastVisibleHourOfDay(20);
         cal.setSizeFull();
         cal.setHeight("100%");
 
-
-
-
-        cal.setEventProvider(customEventProvider);
 
         cal.setHandler(new CalendarComponentEvents.EventClickHandler() {
             @Override
@@ -223,8 +213,8 @@ public class MainView extends UI{
         cal.setHandler(new CalendarComponentEvents.RangeSelectHandler() {
             @Override
             public void rangeSelect(CalendarComponentEvents.RangeSelectEvent event) {
-                //eventForm.setDates(event.getStart(), event.getEnd());
-                //openModalView("Add New Event", eventForm);
+                eventModal.setDates(event.getStart(), event.getEnd());
+                openModalView("Add New Event", eventModal);
             }
         });
 
