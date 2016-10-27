@@ -69,10 +69,55 @@ public class UserView extends UI {
 
     private void addHeader()
     {
+        HorizontalLayout spacingLayout = new HorizontalLayout();
+
+        spacingLayout.setSpacing(true);
+        spacingLayout.setMargin(true);
+
         Label header = new Label("YOUR ARE VIEWING THE PROFILE ASSIGNED TO " + user.getFullName());
         header.addStyleName(ValoTheme.LABEL_H3);
         header.setSizeUndefined();
-        layout.addComponent(header);
+
+        Button logOut = new Button("LogOut");
+        Button calendar = new Button("Calendar");
+
+        logOut.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        logOut.setIcon(FontAwesome.XING);
+
+        calendar.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        calendar.setIcon(FontAwesome.CALENDAR);
+
+        spacingLayout.addComponents(header, logOut, calendar);
+
+        logOut.addClickListener(new Button.ClickListener(){
+            @Override
+            public void buttonClick(Button.ClickEvent event){
+                try {
+                    User user = accessControlService.fetchAllRegisteredUser().get(0);
+
+                    user.setLoggedIn(false);
+
+                    accessControlService.editUser(user);
+                } catch (PersistenceException exp){
+                    //
+                } catch (NullPointerException exp){
+                    //
+                } catch (Exception exp){
+                    //
+                }
+
+                getUI().getPage().setLocation("/");
+            }
+        });
+
+        calendar.addClickListener(new Button.ClickListener(){
+            @Override
+            public void buttonClick(Button.ClickEvent event){
+                getUI().getPage().setLocation("/calendar");
+            }
+        });
+
+        layout.addComponent(spacingLayout);
     }
 
     private void displayUserInfo(){

@@ -4,6 +4,7 @@ import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
 import com.pucmm.model.CustomEventProvider;
+import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
 import com.vaadin.event.ShortcutAction;
@@ -28,6 +29,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import de.essendi.vaadin.ui.component.numberfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.PersistenceException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -90,19 +92,59 @@ public class MainView extends UI{
 
     private void addForm() {
 
-        Button addButton = new Button("");
-        Button emailBtn = new Button("");
+        HorizontalLayout footerLayout = new HorizontalLayout();
+
+        footerLayout.setSpacing(true);
+        footerLayout.setMargin(true);
+
+        Button addButton = new Button("Add Event");
+        Button emailBtn = new Button("Send Email");
+        Button logOut = new Button("LogOut");
+        Button viewInfo = new Button("User Info");
 
         emailBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         emailBtn.setIcon(FontAwesome.ENVELOPE);
         addButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
         addButton.setIcon(FontAwesome.PLUS);
+        logOut.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        logOut.setIcon(FontAwesome.XING);;
+        viewInfo.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        viewInfo.setIcon(FontAwesome.ARCHIVE);
 
         setUpButtonModalView(addButton, "Add New Event", eventModal);
         setUpButtonModalView(emailBtn, "Send Email", emailModal);
 
+        footerLayout.addComponents(addButton, emailBtn, logOut, viewInfo);
 
-        layout.addComponents(addButton,emailBtn);
+        logOut.addClickListener(new Button.ClickListener(){
+            @Override
+            public void buttonClick(Button.ClickEvent event){
+                try {
+                    User user = accessControlService.fetchAllRegisteredUser().get(0);
+
+                    user.setLoggedIn(false);
+
+                    accessControlService.editUser(user);
+                } catch (PersistenceException ex){
+                    //
+                } catch (NullPointerException ex){
+                    //
+                } catch (Exception ex){
+                    //
+                }
+
+                getUI().getPage().setLocation("/");
+            }
+        });
+
+        viewInfo.addClickListener(new Button.ClickListener(){
+            @Override
+            public void buttonClick(Button.ClickEvent event){
+                getUI().getPage().setLocation("/userInfo");
+            }
+        });
+
+        layout.addComponent(footerLayout);
 
         //layout.setComponentAlignment(addButton, Alignment.TOP_CENTER);
 
