@@ -31,12 +31,12 @@ public class EventService {
         return eventRepository.findByDatesBetween(startDate, endDate);
     }
 
-    //@Transactional
+    @Transactional
     public CustomEvent registerEvent(String caption, String description, boolean isAllDay, Date start, Date end) {
         return eventRepository.save(new CustomEvent(caption, description, isAllDay, start, end));
     }
 
-    //@Transactional
+    @Transactional
     public boolean delete(CustomEvent customEvent) {
         eventRepository.delete(customEvent);
         return true;

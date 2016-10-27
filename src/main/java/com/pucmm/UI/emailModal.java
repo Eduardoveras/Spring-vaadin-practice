@@ -31,10 +31,11 @@ public class emailModal extends FormLayout {
 
     Button addBtn = new Button("Send");
     Button cancelBtn = new Button("Cancel");
-    AccessControlService accessControlService= new AccessControlService();
 
 
-    public emailModal() {
+
+    public emailModal(String email) {
+        emailTo.setValue(email);
         setup();
 
     }
@@ -52,7 +53,7 @@ public class emailModal extends FormLayout {
                 Email from = new Email(emailFrom.getValue());
                 String subject = caption.getValue();
                 Email to = new Email(emailTo.getValue());
-                Content content = new Content("text/plain", description.getValue());
+                Content content = new Content("text/plain", description.getValue()+"Email Service by Eduardo Veras and Djidjelly Siclait");
                 Mail mail = new Mail(from, subject, to, content);
 
                 SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
@@ -88,7 +89,6 @@ public class emailModal extends FormLayout {
         emailFrom.setValue("test@test.com");
         emailTo.setCaption("To:");
 
-//        emailTo.setValue(accessControlService.fetchAllRegisteredUser().get(0).getEmail());
         caption.setCaption("Title:");
         description.setCaption("Description:");
 

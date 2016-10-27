@@ -23,6 +23,8 @@ import java.util.List;
 @Table(name = "event")
 public class CustomEvent implements Serializable, CalendarEvent, EditableCalendarEvent, CalendarEvent.EventChangeNotifier {
 
+
+
     @Id
     @GeneratedValue
     private Long id;
@@ -121,6 +123,10 @@ public class CustomEvent implements Serializable, CalendarEvent, EditableCalenda
         return styleName;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean isAllDay() {
         return isAllDay;
@@ -130,9 +136,6 @@ public class CustomEvent implements Serializable, CalendarEvent, EditableCalenda
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     protected void fireEventChange() {
         EventChangeEvent event = new EventChangeEvent(this);

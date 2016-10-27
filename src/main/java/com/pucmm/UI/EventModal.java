@@ -19,7 +19,7 @@ import java.util.Date;
 @Component
 @UIScope
 @SpringUI
-public class eventModal extends FormLayout {
+public class EventModal extends FormLayout {
 
     @Autowired
     EventService eventService;
@@ -33,13 +33,13 @@ public class eventModal extends FormLayout {
     Button addBtn = new Button("Add");
     Button cancelBtn = new Button("Cancel");
 
-    public eventModal(Date startDate, Date endDate) {
+    public EventModal(Date startDate, Date endDate) {
         start.setValue(startDate);
         end.setValue(endDate);
         setup();
     }
 
-    public eventModal() {
+    public EventModal() {
         start.setValue(new Date());
         end.setValue(new Date());
         setup();
@@ -65,7 +65,7 @@ public class eventModal extends FormLayout {
                 //e.setAllDay(false);
                 try {
                     SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-                    eventService.registerEvent(caption.getValue(), description.getValue(), false, sdf1.parse(start.getValue().toString()), sdf1.parse(end.getValue().toString()));
+                    eventService.registerEvent(e.getCaption(), e.getDescription(), false, sdf1.parse(e.getStart().toString()), sdf1.parse(e.getEnd().toString()));
 
                 } catch (Exception exp){
                     

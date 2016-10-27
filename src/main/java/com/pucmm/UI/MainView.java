@@ -40,23 +40,25 @@ public class MainView extends UI{
 
 
     @Autowired
-    private eventModal eventModal;
+    private EventModal eventModal;
     private emailModal emailModal;
 
 
     private VerticalLayout layout = new VerticalLayout();
-    public static Calendar cal;
+    public static Calendar cal= new Calendar();
 
     @Autowired
-    public MainView(eventModal eventMod)
+    public MainView(EventModal eventMod)
     {
         this.eventModal = eventMod;
+
 
         //this.eventModal.setCalendar(cal);
     }
 
     @Override
     protected void init(VaadinRequest request) {
+        //cal
 
         if (accessControlService.fetchAllRegisteredUser().isEmpty())
             getUI().getPage().setLocation("/");
@@ -67,8 +69,8 @@ public class MainView extends UI{
             addHeader();
             addCalendar();
             //cal.setEventProvider(customEventProvider);
-            eventModal = new eventModal();
-            emailModal = new emailModal();
+            eventModal = new EventModal();
+            emailModal = new emailModal(accessControlService.fetchAllRegisteredUser().get(0).getEmail());
             addForm();
         }
     }
@@ -163,7 +165,6 @@ public class MainView extends UI{
         addButton.setIcon(FontAwesome.PLUS);
         addButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
-        cal= new Calendar();
         cal.setFirstDayOfWeek(1);
         cal.setTimeFormat(Calendar.TimeFormat.Format12H);
 
