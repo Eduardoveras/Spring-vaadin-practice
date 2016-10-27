@@ -3,6 +3,7 @@ package com.pucmm.UI;
 import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
+import com.pucmm.model.CustomEventProvider;
 import com.pucmm.model.User;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Item;
@@ -47,6 +48,8 @@ public class MainView extends UI{
     private AccessControlService accessControlService;
     @Autowired
     public static EventService eventService = new EventService();
+    private CustomEventProvider customEventProvider;
+
 
     @Autowired
     private eventModal eventModal;
@@ -55,6 +58,17 @@ public class MainView extends UI{
 
     private VerticalLayout layout = new VerticalLayout();
     public static Calendar cal;
+
+    @Autowired
+    public MainView(eventModal eventMod,CustomEventProvider customEve)
+    {
+        this.eventModal = eventMod;
+        this.customEventProvider = customEve;
+
+        //this.eventModal.setCalendar(cal);
+    }
+
+
 
 
     @Override
@@ -68,6 +82,7 @@ public class MainView extends UI{
             setupLayout();
             addHeader();
             addCalendar();
+            cal.setEventProvider(customEventProvider);
             eventModal = new eventModal();
             emailModal = new emailModal();
             addForm();
