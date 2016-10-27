@@ -1,5 +1,6 @@
 package com.pucmm.UI;
 
+import com.pucmm.Services.AccessControlService;
 import com.pucmm.Services.EventService;
 import com.pucmm.model.CustomEvent;
 import com.sendgrid.*;
@@ -30,6 +31,7 @@ public class emailModal extends FormLayout {
 
     Button addBtn = new Button("Send");
     Button cancelBtn = new Button("Cancel");
+    AccessControlService accessControlService= new AccessControlService();
 
 
     public emailModal() {
@@ -83,7 +85,10 @@ public class emailModal extends FormLayout {
         buttons.setSpacing(true);
 
         emailFrom.setCaption("From:");
+        emailFrom.setValue("test@test.com");
         emailTo.setCaption("To:");
+
+//        emailTo.setValue(accessControlService.fetchAllRegisteredUser().get(0).getEmail());
         caption.setCaption("Title:");
         description.setCaption("Description:");
 
