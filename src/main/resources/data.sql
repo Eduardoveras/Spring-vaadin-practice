@@ -1,0 +1,1 @@
+INSERT INTO usuarios (email, first_name, last_name, password, logged_in) VALUES ('admin', 'admin', 'Administrador', 'admin', FALSE);

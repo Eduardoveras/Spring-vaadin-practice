@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Eduardo veras on 22-Oct-16.
  */
 @Service
-@Transactional
+//@Transactional
 public class EventService {
 
     @Autowired
@@ -31,13 +31,13 @@ public class EventService {
         return eventRepository.findByDatesBetween(startDate, endDate);
     }
 
-    @Transactional
+    //@Transactional
     public CustomEvent save(CustomEvent customEvent) {
         eventRepository.save(customEvent);
         return customEvent;
     }
 
-    @Transactional
+    //@Transactional
     public boolean delete(CustomEvent customEvent) {
         eventRepository.delete(customEvent);
         return true;

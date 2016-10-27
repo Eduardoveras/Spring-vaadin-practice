@@ -5,9 +5,11 @@ package com.pucmm.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "usuarios")
 public class User implements Serializable {
     // Atributes
     @Id
