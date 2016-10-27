@@ -29,11 +29,13 @@ public class LoginView extends UI {
 
     @Override
     protected void init(VaadinRequest request){
-
-        setupLayout();
-        addHeader();
-        addForm();
-
+        if (!accessControlService.fetchAllRegisteredUser().isEmpty() &&  accessControlService.fetchAllRegisteredUser().get(0).isLoggedIn())
+            getUI().getPage().setLocation("/calendar");
+        else {
+            setupLayout();
+            addHeader();
+            addForm();
+        }
     }
 
     public void setupLayout()

@@ -60,22 +60,23 @@ public class MainView extends UI{
     @Override
     protected void init(VaadinRequest request) {
 
-        setupLayout();
-        addHeader();
-        addCalendar();
-        eventModal = new eventModal();
-        eventModal.setCalendar(cal);
-        emailModal= new emailModal();
-        addForm();
-    }
-
-    public void setupLayout()
-    {
         if (accessControlService.fetchAllRegisteredUser().isEmpty())
             getUI().getPage().setLocation("/");
         else if (!accessControlService.fetchAllRegisteredUser().get(0).isLoggedIn())
             getUI().getPage().setLocation("/");
+        else {
+            setupLayout();
+            addHeader();
+            addCalendar();
+            eventModal = new eventModal();
+            eventModal.setCalendar(cal);
+            emailModal = new emailModal();
+            addForm();
+        }
+    }
 
+    public void setupLayout()
+    {
         Page.getCurrent().setTitle("Spring Vaadin Calendar");
 
         layout= new VerticalLayout();
